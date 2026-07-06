@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 
 import healthRoutes from "./routes/health.routes";
 import streamRoutes from "./routes/stream.routes";
+import resumeRoutes from "./routes/resume.routes";
 
 const app = express();
 
@@ -16,5 +17,7 @@ app.use(cookieParser());
 app.use("/api/health", healthRoutes);
 
 app.use("/api/stream", streamRoutes);
+
+app.use("/api/resumes", resumeRoutes);
 
 export default app;
