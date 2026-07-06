@@ -10,6 +10,7 @@ Return:
 - Strengths
 - Weaknesses
 - Missing Keywords
+- Short Summary
 
 Resume:
 

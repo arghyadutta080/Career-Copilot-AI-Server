@@ -5,6 +5,7 @@ export const ATSResultSchema = z.object({
   strengths: z.array(z.string()),
   weaknesses: z.array(z.string()),
   missingKeywords: z.array(z.string()),
+  summary: z.string(),
 });
 
 export type ATSResult = z.infer<typeof ATSResultSchema>;

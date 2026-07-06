@@ -31,7 +31,8 @@ const AnalysisSchema = new mongoose.Schema(
         score: Number,
         strengths: [String],
         weaknesses: [String],
-        missingKeywords: [String]
+        missingKeywords: [String],
+        summary: String,
       },
 
       skillGap: {

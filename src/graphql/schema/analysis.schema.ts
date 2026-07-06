@@ -13,6 +13,7 @@ type ATSResult {
     strengths: [String!]!
     weaknesses: [String!]!
     missingKeywords: [String!]!
+    summary: String!
 }
 
 type SkillGapResult {
