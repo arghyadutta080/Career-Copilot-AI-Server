@@ -1,7 +1,7 @@
 import { Router } from "express";
 
 import { addClient, removeClient, sendEvent } from "../stream/sseManager";
-import { fakeAnalysis } from "../services/analysis.service";
+// import { fakeAnalysis } from "../analysis/services/analysis.service";
 
 const router = Router();
 
@@ -27,19 +27,19 @@ router.get(
   },
 );
 
-router.post(
-  "/test/:analysisId",
+// router.post(
+//   "/test/:analysisId",
 
-  async (req, res) => {
-    const analysisId = req.params.analysisId;
+//   async (req, res) => {
+//     const analysisId = req.params.analysisId;
 
-    fakeAnalysis(analysisId);
+//     fakeAnalysis(analysisId);
 
-    return res.json({
-      success: true,
-      message: "Fake analysis started",
-    });
-  },
-);
+//     return res.json({
+//       success: true,
+//       message: "Fake analysis started",
+//     });
+//   },
+// );
 
 export default router;
