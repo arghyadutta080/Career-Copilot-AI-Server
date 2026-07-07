@@ -28,8 +28,28 @@ type SkillGapResult {
     summary: String!
 }
 
+type InterviewQuestion {
+    id: String
+    question: String
+    difficulty: String
+    topics: [String]
+    answer: String
+}
+
+type InterviewFollowUp {
+    parentQuestion: String
+    followUps: [InterviewQuestion]
+}
+
 type InterviewResult {
-    questions: [String!]!
+    hr: [InterviewQuestion]
+    resumeBased: [InterviewQuestion]
+    experienceBased: [InterviewQuestion]
+    projectBased: [InterviewQuestion]
+    technical: [InterviewQuestion]
+    coding: [InterviewQuestion]
+    behavioral: [InterviewQuestion]
+    followUps: [InterviewFollowUp]
 }
 
 type RoadmapResult {

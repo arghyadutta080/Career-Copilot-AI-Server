@@ -30,7 +30,7 @@ export class SkillGapTool {
     sendEvent(state.analysisId, {
       type: "progress",
       step: "Skill Gap",
-      progress: 40,
+      progress: 35,
       message: "Skill Gap analysis completed",
       data: result,
     });

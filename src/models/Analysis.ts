@@ -48,7 +48,86 @@ const AnalysisSchema = new mongoose.Schema(
       },
 
       interview: {
-        questions: [String],
+        hr: [
+          {
+            id: String,
+            question: String,
+            difficulty: String,
+            topics: [String],
+            answer: String,
+          },
+        ],
+
+        resumeBased: [
+          {
+            id: String,
+            question: String,
+            topics: [String],
+            answer: String,
+          },
+        ],
+
+        experienceBased: [
+          {
+            id: String,
+            question: String,
+            topics: [String],
+            answer: String,
+          },
+        ],
+
+        projectBased: [
+          {
+            id: String,
+            question: String,
+            topics: [String],
+            answer: String,
+          },
+        ],
+
+        technical: [
+          {
+            id: String,
+            question: String,
+            difficulty: String,
+            topics: [String],
+            answer: String,
+          },
+        ],
+
+        coding: [
+          {
+            id: String,
+            question: String,
+            difficulty: String,
+            topics: [String],
+            answer: String,
+          },
+        ],
+
+        behavioral: [
+          {
+            id: String,
+            question: String,
+            topics: [String],
+            answer: String,
+          },
+        ],
+
+        followUps: [
+          {
+            parentQuestion: String,
+            followUps: [
+              {
+                id: String,
+                question: String,
+                difficulty: String,
+                topics: [String],
+                answer: String,
+              },
+            ],
+          },
+        ],
       },
 
       roadmap: {
