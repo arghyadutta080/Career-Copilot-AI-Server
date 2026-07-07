@@ -5,6 +5,8 @@ import { ResumeOptimizerResult } from "../tools/resume-optimizer/optimizer.schem
 import { LearningRoadmap } from "../tools/roadmap/roadmap.schema";
 import { SkillGapResult } from "../tools/skill-gap/skillGap.schema";
 
+type ToolStatus = "not_started" | "running" | "completed" | "failed";
+
 export interface AnalysisState {
   analysisId: string;
   resumeId: string;
@@ -20,4 +22,12 @@ export interface AnalysisState {
   roadmap?: LearningRoadmap;
   resumeOptimizer?: ResumeOptimizerResult;
   coverLetter?: CoverLetterResult;
+  toolStatus?: {
+    ats: ToolStatus;
+    skillGap: ToolStatus;
+    interview: ToolStatus;
+    roadmap: ToolStatus;
+    optimizer: ToolStatus;
+    coverLetter: ToolStatus;
+  };
 }

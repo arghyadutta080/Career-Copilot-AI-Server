@@ -9,10 +9,16 @@ import { buildResumeOptimizerPrompt } from "./optimizer.prompt";
 
 export class ResumeOptimizerTool {
   async execute(state: AnalysisState): Promise<AnalysisState> {
+    await Analysis.findByIdAndUpdate(state.analysisId, {
+      $set: {
+        "toolStatus.optimizer": "running",
+      },
+    });
+    
     sendEvent(state.analysisId, {
       type: "progress",
       step: "Resume Optimizer",
-      progress: 45,
+      progress: 55,
       message: "Optimizing resume...",
     });
 
@@ -31,6 +37,7 @@ export class ResumeOptimizerTool {
     await Analysis.findByIdAndUpdate(state.analysisId, {
       status: "running",
       "results.optimizer": result,
+      "toolStatus.optimizer": "completed",
     });
 
     console.log("[OPTIMIZER]: \n", result);
@@ -38,7 +45,7 @@ export class ResumeOptimizerTool {
     sendEvent(state.analysisId, {
       type: "progress",
       step: "Resume Optimizer",
-      progress: 60,
+      progress: 75,
       message: "Resume optimization completed.",
       data: result,
     });

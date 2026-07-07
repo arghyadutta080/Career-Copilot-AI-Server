@@ -9,6 +9,12 @@ import { buildRoadmapPrompt } from "./roadmap.prompt";
 
 export class RoadmapTool {
   async execute(state: AnalysisState): Promise<AnalysisState> {
+    await Analysis.findByIdAndUpdate(state.analysisId, {
+      $set: {
+        "toolStatus.roadmap": "running",
+      },
+    });
+
     sendEvent(state.analysisId, {
       type: "progress",
       step: "Learning Roadmap",
@@ -32,10 +38,8 @@ export class RoadmapTool {
     );
 
     await Analysis.findByIdAndUpdate(state.analysisId, {
-      $set: {
-        "results.roadmap": result,
-        status: "completed",
-      },
+      "results.roadmap": result,
+      "toolStatus.roadmap": "completed",
     });
 
     console.log("[ROADMAP]: \n", result);

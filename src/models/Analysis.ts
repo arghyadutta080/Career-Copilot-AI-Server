@@ -26,6 +26,44 @@ const AnalysisSchema = new mongoose.Schema(
       default: "pending",
     },
 
+    toolStatus: {
+      ats: {
+        type: String,
+        enum: ["not_started", "running", "completed", "failed"],
+        default: "not_started",
+      },
+
+      skillGap: {
+        type: String,
+        enum: ["not_started", "running", "completed", "failed"],
+        default: "not_started",
+      },
+
+      optimizer: {
+        type: String,
+        enum: ["not_started", "running", "completed", "failed"],
+        default: "not_started",
+      },
+
+      coverLetter: {
+        type: String,
+        enum: ["not_started", "running", "completed", "failed"],
+        default: "not_started",
+      },
+
+      interview: {
+        type: String,
+        enum: ["not_started", "running", "completed", "failed"],
+        default: "not_started",
+      },
+
+      roadmap: {
+        type: String,
+        enum: ["not_started", "running", "completed", "failed"],
+        default: "not_started",
+      },
+    },
+
     results: {
       ats: {
         score: Number,

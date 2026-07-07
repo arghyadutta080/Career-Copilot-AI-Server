@@ -10,6 +10,12 @@ import { buildInterviewPrompt } from "./interview.prompt";
 
 export class InterviewTool {
   async execute(state: AnalysisState): Promise<AnalysisState> {
+    await Analysis.findByIdAndUpdate(state.analysisId, {
+      $set: {
+        "toolStatus.interview": "running",
+      },
+    });
+
     sendEvent(state.analysisId, {
       type: "progress",
       step: "Interview Questions",
@@ -44,8 +50,8 @@ export class InterviewTool {
     }));
 
     await Analysis.findByIdAndUpdate(state.analysisId, {
-      status: "running",
       "results.interview": result,
+      "toolStatus.interview": "completed",
     });
 
     console.log("[Interview]: \n", result);

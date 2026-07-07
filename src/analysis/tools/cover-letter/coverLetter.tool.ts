@@ -9,10 +9,16 @@ import { buildCoverLetterPrompt } from "./coverLetter.prompt";
 
 export class CoverLetterTool {
   async execute(state: AnalysisState): Promise<AnalysisState> {
+    await Analysis.findByIdAndUpdate(state.analysisId, {
+      $set: {
+        "toolStatus.coverLetter": "running",
+      },
+    });
+
     sendEvent(state.analysisId, {
       type: "progress",
       step: "Cover Letter",
-      progress: 65,
+      progress: 80,
       message: "Generating cover letter...",
     });
 
@@ -33,8 +39,9 @@ export class CoverLetterTool {
     result.content = result.content.replace(/\\n/g, "\n").trim();
 
     await Analysis.findByIdAndUpdate(state.analysisId, {
-      status: "running",
+      status: "completed",
       "results.coverLetter": result,
+      "toolStatus.coverLetter": "completed",
     });
 
     console.log("[COVER LETTER]: \n", result);
@@ -42,7 +49,7 @@ export class CoverLetterTool {
     sendEvent(state.analysisId, {
       type: "progress",
       step: "Cover Letter",
-      progress: 75,
+      progress: 100,
       message: "Cover letter generated.",
       data: result,
     });

@@ -20,11 +20,11 @@ export class AnalysisPipeline {
     const coverLetter = new CoverLetterTool();
     state = await coverLetter.execute(state);
 
-    const interview = new InterviewTool();
-    state = await interview.execute(state);
+    // const interview = new InterviewTool();
+    // state = await interview.execute(state);
 
-    const roadmap = new RoadmapTool();
-    state = await roadmap.execute(state);
+    // const roadmap = new RoadmapTool();
+    // state = await roadmap.execute(state);
 
     return state;
   }

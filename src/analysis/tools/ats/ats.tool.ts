@@ -7,6 +7,12 @@ import { AnalysisState } from "../../pipeline/pipeline.types";
 
 export class ATSTool {
   async execute(state: AnalysisState): Promise<AnalysisState> {
+    await Analysis.findByIdAndUpdate(state.analysisId, {
+      $set: {
+        "toolStatus.ats": "running",
+      },
+    });
+    
     sendEvent(state.analysisId, {
       type: "progress",
       step: "ATS",
@@ -23,15 +29,16 @@ export class ATSTool {
     await Analysis.findByIdAndUpdate(state.analysisId, {
       status: "running",
       "results.ats": result,
+      "toolStatus.ats": "completed",
     });
 
-    console.log("[ATS]: \n",result)
+    console.log("[ATS]: \n", result);
 
     sendEvent(state.analysisId, {
       type: "progress",
       step: "ATS",
       message: "ATS Score Calculation completed",
-      progress: 20,
+      progress: 25,
       data: result,
     });
 

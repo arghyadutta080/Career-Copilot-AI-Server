@@ -1,5 +1,7 @@
 import {
   createAnalysis,
+  generateInterviewQuestions,
+  generateLearningRoadmap,
   startAnalysis,
 } from "../../analysis/services/analysis.service";
 import { createJobDescription } from "../../services/jobDescription.service";
@@ -21,10 +23,7 @@ export const analysisResolver = {
 
   Mutation: {
     createJobDescription: async (_: any, args: any, ctx: any) => {
-      return await createJobDescription(
-        ctx.user.userId,
-        args,
-      );
+      return await createJobDescription(ctx.user.userId, args);
     },
 
     createAnalysis: async (_: any, args: any, ctx: any) => {
@@ -37,6 +36,18 @@ export const analysisResolver = {
 
     startAnalysis: async (_: any, { analysisId }: any) => {
       void startAnalysis(analysisId);
+
+      return true;
+    },
+
+    generateInterviewQuestions: async (_: any, { analysisId }: any) => {
+      void generateInterviewQuestions(analysisId);
+
+      return true;
+    },
+
+    generateLearningRoadmap: async (_: any, { analysisId }: any) => {
+      void generateLearningRoadmap(analysisId);
 
       return true;
     },

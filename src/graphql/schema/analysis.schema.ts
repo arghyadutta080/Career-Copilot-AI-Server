@@ -127,6 +127,15 @@ type AnalysisResults {
     coverLetter: CoverLetterResult
 }
 
+type ToolStatus {
+  ats: String!
+  skillGap: String!
+  optimizer: String!
+  coverLetter: String!
+  interview: String!
+  roadmap: String!
+}
+
 type Analysis {
     id: ID!
 
@@ -135,6 +144,7 @@ type Analysis {
     jobDescriptionId: ID!
 
     status: String!
+    toolStatus: ToolStatus!
 
     results: AnalysisResults
 
@@ -156,6 +166,14 @@ type Mutation {
     ): Analysis
 
     startAnalysis(
+        analysisId: ID!
+    ): Boolean!
+
+    generateInterviewQuestions(
+        analysisId: ID!
+    ): Boolean!
+
+    generateLearningRoadmap(
         analysisId: ID!
     ): Boolean!
 }

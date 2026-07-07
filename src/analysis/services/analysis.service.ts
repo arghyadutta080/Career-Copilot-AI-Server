@@ -4,6 +4,9 @@ import Resume from "../../models/Resume";
 import JobDescription from "../../models/JobDescription";
 import { AnalysisState } from "../pipeline/pipeline.types";
 import { AnalysisPipeline } from "../pipeline/analysis.pipeline";
+import { InterviewTool } from "../tools/interview/interview.tool";
+import { RoadmapTool } from "../tools/roadmap/roadmap.tool";
+import { buildAnalysisState } from "../utils/buildAnalysisState";
 
 // function sleep(ms: number): Promise<void> {
 //   return new Promise((resolve) => {
@@ -75,6 +78,14 @@ export async function createAnalysis(
     resumeId,
     jobDescriptionId,
     status: "pending",
+    toolStatus: {
+      ats: "not_started",
+      skillGap: "not_started",
+      optimizer: "not_started",
+      coverLetter: "not_started",
+      interview: "not_started",
+      roadmap: "not_started",
+    },
   });
 
   return analysis;
@@ -105,4 +116,22 @@ export async function startAnalysis(analysisId: string) {
   const pipeline = new AnalysisPipeline();
 
   await pipeline.execute(state);
+}
+
+export async function generateInterviewQuestions(analysisId: string) {
+  const state = await buildAnalysisState(analysisId);
+
+  const interviewTool = new InterviewTool();
+  await interviewTool.execute(state);
+}
+
+export async function generateLearningRoadmap(analysisId: string) {
+  const state = await buildAnalysisState(analysisId);
+
+  if (state?.toolStatus?.interview !== "completed") {
+    throw new Error("Interview question generation is not completed");
+  }
+
+  const roadmapTool = new RoadmapTool();
+  await roadmapTool.execute(state);
 }

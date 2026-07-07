@@ -7,10 +7,16 @@ import Analysis from "../../../models/Analysis";
 
 export class SkillGapTool {
   async execute(state: AnalysisState) {
+    await Analysis.findByIdAndUpdate(state.analysisId, {
+      $set: {
+        "toolStatus.skillGap": "running",
+      },
+    });
+
     sendEvent(state.analysisId, {
       type: "progress",
       step: "Skill Gap",
-      progress: 25,
+      progress: 30,
       message: "Analyzing missing skills...",
     });
 
@@ -23,6 +29,7 @@ export class SkillGapTool {
     await Analysis.findByIdAndUpdate(state.analysisId, {
       status: "running",
       "results.skillGap": result,
+      "toolStatus.skillGap": "completed",
     });
 
     console.log("[SKILL GAP]: \n", result);
@@ -30,7 +37,7 @@ export class SkillGapTool {
     sendEvent(state.analysisId, {
       type: "progress",
       step: "Skill Gap",
-      progress: 35,
+      progress: 50,
       message: "Skill Gap analysis completed",
       data: result,
     });
