@@ -131,7 +131,37 @@ const AnalysisSchema = new mongoose.Schema(
       },
 
       roadmap: {
-        steps: [String],
+        overview: String,
+
+        milestones: [
+          {
+            title: String,
+            description: String,
+
+            steps: [
+              {
+                order: Number,
+                title: String,
+                description: String,
+                priority: String,
+                estimatedHours: Number,
+
+                resources: [
+                  {
+                    title: String,
+                    type: { type: String },
+                    query: String,
+                    reason: String,
+                  },
+                ],
+
+                outcomes: [String],
+              },
+            ],
+          },
+        ],
+
+        interviewChecklist: [String],
       },
 
       optimizer: {

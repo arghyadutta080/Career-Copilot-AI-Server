@@ -52,8 +52,33 @@ type InterviewResult {
     followUps: [InterviewFollowUp]
 }
 
-type RoadmapResult {
-    steps: [String!]!
+type LearningResource {
+  title: String
+  type: String
+  query: String
+  reason: String
+}
+
+type RoadmapStep {
+  order: Int
+  title: String
+  description: String
+  priority: String
+  estimatedHours: Int
+  resources: [LearningResource]
+  outcomes: [String]
+}
+
+type RoadmapMilestone {
+  title: String
+  description: String
+  steps: [RoadmapStep]
+}
+
+type LearningRoadmap {
+  overview: String
+  milestones: [RoadmapMilestone]
+  interviewChecklist: [String]
 }
 
 type ATSImpact {
@@ -97,7 +122,7 @@ type AnalysisResults {
     ats: ATSResult
     skillGap: SkillGapResult
     interview: InterviewResult
-    roadmap: RoadmapResult
+    roadmap: LearningRoadmap
     optimizer: ResumeOptimizerResult
     coverLetter: CoverLetterResult
 }

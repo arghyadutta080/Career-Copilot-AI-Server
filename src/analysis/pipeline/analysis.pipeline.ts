@@ -2,6 +2,7 @@ import { ATSTool } from "../tools/ats/ats.tool";
 import { CoverLetterTool } from "../tools/cover-letter/coverLetter.tool";
 import { InterviewTool } from "../tools/interview/interview.tool";
 import { ResumeOptimizerTool } from "../tools/resume-optimizer/optimizer.tool";
+import { RoadmapTool } from "../tools/roadmap/roadmap.tool";
 import { SkillGapTool } from "../tools/skill-gap/skillGap.tool";
 import { AnalysisState } from "./pipeline.types";
 
@@ -21,6 +22,9 @@ export class AnalysisPipeline {
 
     const interview = new InterviewTool();
     state = await interview.execute(state);
+
+    const roadmap = new RoadmapTool();
+    state = await roadmap.execute(state);
 
     return state;
   }
