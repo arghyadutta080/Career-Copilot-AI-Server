@@ -1,3 +1,4 @@
+import "../src/config/polyfills";
 import app from "../src/app";
 import { connectDB } from "../src/config/db";
 import { setupGraphQL } from "../src/graphql";
