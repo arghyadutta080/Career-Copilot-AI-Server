@@ -98,6 +98,8 @@ export async function startAnalysis(analysisId: string) {
     rawResume: resume.rawText || "",
     parsedResume: resume.parsedData,
     jobDescription: job.description,
+    jobTitle: job.title,
+    company: job.company,
   };
 
   const pipeline = new AnalysisPipeline();

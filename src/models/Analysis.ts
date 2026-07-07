@@ -92,6 +92,7 @@ const AnalysisSchema = new mongoose.Schema(
       },
 
       coverLetter: {
+        subject: String,
         content: String,
       },
     },

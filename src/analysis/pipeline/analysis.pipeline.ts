@@ -1,4 +1,5 @@
 import { ATSTool } from "../tools/ats/ats.tool";
+import { CoverLetterTool } from "../tools/cover-letter/coverLetter.tool";
 import { ResumeOptimizerTool } from "../tools/resume-optimizer/optimizer.tool";
 import { SkillGapTool } from "../tools/skill-gap/skillGap.tool";
 import { AnalysisState } from "./pipeline.types";
@@ -13,6 +14,9 @@ export class AnalysisPipeline {
 
     const optimizer = new ResumeOptimizerTool();
     state = await optimizer.execute(state);
+
+    const coverLetter = new CoverLetterTool();
+    state = await coverLetter.execute(state);
 
     return state;
   }

@@ -69,6 +69,7 @@ type ResumeOptimizerResult {
 }
 
 type CoverLetterResult {
+    subject: String
     content: String
 }
 
