@@ -22,7 +22,9 @@ export class RoadmapTool {
       message: "Generating personalized roadmap...",
     });
 
-    const structuredLLM = llm.withStructuredOutput(LearningRoadmapSchema);
+    const structuredLLM = llm.withStructuredOutput(LearningRoadmapSchema).withConfig({
+      runName: "Roadmap Generation Tool",
+    });
 
     const result = await structuredLLM.invoke(
       buildRoadmapPrompt(

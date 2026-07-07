@@ -20,7 +20,9 @@ export class ATSTool {
       progress: 10,
     });
 
-    const structuredLLM = llm.withStructuredOutput(ATSResultSchema);
+    const structuredLLM = llm.withStructuredOutput(ATSResultSchema).withConfig({
+      runName: "ATS Score Calculation Tool",
+    });
 
     const result = await structuredLLM.invoke(
       buildATSPrompt(state.rawResume, state.jobDescription),

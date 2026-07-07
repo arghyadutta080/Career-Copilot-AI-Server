@@ -2,7 +2,9 @@ import { llm } from "../llm/gemini";
 import { ResumeStructuredSchema } from "../types/resume.schema";
 
 export async function structureResume(rawText: string) {
-  const structuredLLM = llm.withStructuredOutput(ResumeStructuredSchema);
+  const structuredLLM = llm.withStructuredOutput(ResumeStructuredSchema).withConfig({
+    runName: "Resume Parser Tool"
+  });
 
   const result = await structuredLLM.invoke(`
 Extract all information from the resume.

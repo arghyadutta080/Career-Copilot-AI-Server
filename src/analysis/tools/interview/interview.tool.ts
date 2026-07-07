@@ -23,7 +23,9 @@ export class InterviewTool {
       message: "Generating interview questions...",
     });
 
-    const structuredLLM = llm.withStructuredOutput(InterviewResultSchema);
+    const structuredLLM = llm.withStructuredOutput(InterviewResultSchema).withConfig({
+      runName: "Interview Questions Generation Tool",
+    });
 
     const result = (await structuredLLM.invoke(
       buildInterviewPrompt(

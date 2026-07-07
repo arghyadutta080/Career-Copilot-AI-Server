@@ -12,4 +12,8 @@ export const env = {
     cloudinaryCloudName: process.env.CLOUDINARY_CLOUD_NAME || '',
     cloudinaryApiKey: process.env.CLOUDINARY_API_KEY || '',
     cloudinaryApiSecret: process.env.CLOUDINARY_API_SECRET || '',
+    langsmithTracing: process.env.LANGSMITH_TRACING || '',
+    langsmithEndpoint: process.env.LANGSMITH_ENDPOINT || '',
+    langsmithApiKey: process.env.LANGSMITH_API_KEY || '',
+    langsmithProject: process.env.LANGSMITH_PROJECT || '',
 };

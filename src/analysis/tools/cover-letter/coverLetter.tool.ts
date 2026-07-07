@@ -22,7 +22,9 @@ export class CoverLetterTool {
       message: "Generating cover letter...",
     });
 
-    const structuredLLM = llm.withStructuredOutput(CoverLetterSchema);
+    const structuredLLM = llm.withStructuredOutput(CoverLetterSchema).withConfig({
+      runName: "Cover Letter Generation Tool",
+    });
 
     const result = await structuredLLM.invoke(
       buildCoverLetterPrompt(

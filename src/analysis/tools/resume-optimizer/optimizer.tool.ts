@@ -22,7 +22,9 @@ export class ResumeOptimizerTool {
       message: "Optimizing resume...",
     });
 
-    const structuredLLM = llm.withStructuredOutput(ResumeOptimizerSchema);
+    const structuredLLM = llm.withStructuredOutput(ResumeOptimizerSchema).withConfig({
+      runName: "Resume Optimization Tool",
+    });
 
     const result = await structuredLLM.invoke(
       buildResumeOptimizerPrompt(

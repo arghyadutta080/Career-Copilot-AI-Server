@@ -20,7 +20,9 @@ export class SkillGapTool {
       message: "Analyzing missing skills...",
     });
 
-    const structuredLLM = llm.withStructuredOutput(SkillGapSchema);
+    const structuredLLM = llm.withStructuredOutput(SkillGapSchema).withConfig({
+      runName: "Skill Gap Detection Tool",
+    });
 
     const result = await structuredLLM.invoke(
       buildSkillGapPrompt(state.rawResume, state.jobDescription),
