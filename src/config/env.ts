@@ -16,4 +16,5 @@ export const env = {
     langsmithEndpoint: process.env.LANGSMITH_ENDPOINT || '',
     langsmithApiKey: process.env.LANGSMITH_API_KEY || '',
     langsmithProject: process.env.LANGSMITH_PROJECT || '',
+    allowedOrigins: process.env.ALLOWED_ORIGINS || "http://localhost:3000,http://localhost:3001",
 };

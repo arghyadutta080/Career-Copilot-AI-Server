@@ -1,13 +1,5 @@
 export const analysisTypeDefs = `#graphql
 
-type JobDescription {
-    id: ID!
-    title: String!
-    company: String
-    description: String!
-    extractedSkills: [String!]!
-}
-
 type ATSResult {
     score: Int
     strengths: [String!]!
@@ -154,12 +146,6 @@ type Analysis {
 
 type Mutation {
 
-    createJobDescription(
-        title: String!
-        company: String
-        description: String!
-    ): JobDescription
-
     createAnalysis(
         resumeId: ID!
         jobDescriptionId: ID!
@@ -179,8 +165,6 @@ type Mutation {
 }
 
 type Query {
-
-    myJobDescriptions: [JobDescription!]!
 
     getAnalysis(
         id: ID!
