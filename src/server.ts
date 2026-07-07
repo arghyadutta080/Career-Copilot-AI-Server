@@ -16,3 +16,12 @@ async function bootstrap() {
 }
 
 bootstrap();
+
+// Global process error handlers to prevent crashes from unhandled async/sync exceptions
+process.on("unhandledRejection", (reason, promise) => {
+  console.error("[Process Error] Unhandled Rejection at:", promise, "reason:", reason);
+});
+
+process.on("uncaughtException", (error) => {
+  console.error("[Process Error] Uncaught Exception thrown:", error);
+});

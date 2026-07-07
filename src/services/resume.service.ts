@@ -13,11 +13,11 @@ export async function createResume(userId: string, file: any) {
   if (ext === ".pdf") rawText = await parsePDF(file.buffer);
   else rawText = await parseDOCX(file.buffer);
 
-  console.log("[TESTING] rawText: ", rawText);
+  console.log("[Resume Service] Extracted rawText\n: ", rawText);
 
   const parsedData = await structureResume(rawText);
 
-  console.log("[TESTING] parsedData: ", parsedData);
+  console.log("[Resume Service] Structured parsedData\n: ", parsedData);
 
   // Upload to Cloudinary
   const uploadResult = await uploadToCloudinary(file.buffer, file.originalname);
@@ -32,4 +32,8 @@ export async function createResume(userId: string, file: any) {
   });
 
   return resume;
+}
+
+export async function getResumeById(userId: string, resumeId: string) {
+  return await Resume.findOne({ _id: resumeId, userId });
 }

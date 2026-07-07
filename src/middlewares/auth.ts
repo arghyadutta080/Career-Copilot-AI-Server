@@ -8,7 +8,7 @@ export function auth(req: any, res: any, next: any) {
 
   try {
     req.user = jwt.verify(token, env.jwtSecret);
-    console.log("[TESTING] AUTH : ", req.user);
+    console.log("[Auth Middleware] Verified User\n:", req.user);
 
     next();
   } catch {

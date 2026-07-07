@@ -16,7 +16,7 @@ export const findOrCreateUser = async (profile: any) => {
 };
 
 export const getMe = async (id: string) => {
-  console.log("[TESTING]: id", id);
+  console.log("[User Service] Fetching profile for User ID:", id);
   const user = await User.findById(id);
   return user;
 };
