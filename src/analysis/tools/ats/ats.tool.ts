@@ -11,7 +11,7 @@ export class ATSTool {
       type: "progress",
       step: "ATS",
       message: "Calculating ATS score...",
-      progress: 20,
+      progress: 10,
     });
 
     const structuredLLM = llm.withStructuredOutput(ATSResultSchema);
@@ -25,11 +25,13 @@ export class ATSTool {
       "results.ats": result,
     });
 
+    console.log("[ATS]: \n",result)
+
     sendEvent(state.analysisId, {
       type: "progress",
       step: "ATS",
-      message: "ATS completed",
-      progress: 40,
+      message: "ATS Score Calculation completed",
+      progress: 20,
       data: result,
     });
 

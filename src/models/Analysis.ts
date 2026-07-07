@@ -37,6 +37,14 @@ const AnalysisSchema = new mongoose.Schema(
 
       skillGap: {
         missingSkills: [String],
+        recommendedSkills: [String],
+        learningPriority: [
+          {
+            skill: String,
+            reason: String,
+          },
+        ],
+        summary: String,
       },
 
       interview: {
@@ -48,7 +56,39 @@ const AnalysisSchema = new mongoose.Schema(
       },
 
       optimizer: {
-        optimizedResume: String,
+        overallSummary: String,
+
+        atsImpact: {
+          currentScore: Number,
+          expectedScore: Number,
+          reason: String,
+        },
+
+        keywordSuggestions: [String],
+
+        experienceSuggestions: [
+          {
+            company: String,
+            role: String,
+            suggestions: [String],
+          },
+        ],
+
+        projectSuggestions: [
+          {
+            project: String,
+            suggestions: [String],
+          },
+        ],
+
+        sectionSuggestions: [
+          {
+            section: String,
+            suggestion: String,
+          },
+        ],
+
+        optimizedContent: String,
       },
 
       coverLetter: {

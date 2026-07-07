@@ -1,4 +1,6 @@
 import { ATSResult } from "../tools/ats/ats.schema";
+import { ResumeOptimizerResult } from "../tools/resume-optimizer/optimizer.schema";
+import { SkillGapResult } from "../tools/skill-gap/skillGap.schema";
 
 export interface AnalysisState {
   analysisId: string;
@@ -8,9 +10,9 @@ export interface AnalysisState {
   parsedResume: any;
   jobDescription: string;
   ats?: ATSResult;
-  missingSkills?: string[];
+  skillGap?: SkillGapResult;
   interviewQuestions?: string[];
   roadmap?: string[];
-  optimizedResume?: string;
+  resumeOptimizer?: ResumeOptimizerResult;
   coverLetter?: string;
 }

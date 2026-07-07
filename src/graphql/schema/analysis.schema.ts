@@ -16,8 +16,16 @@ type ATSResult {
     summary: String!
 }
 
+type LearningPriorityItem {
+    skill: String!
+    reason: String!
+}
+
 type SkillGapResult {
     missingSkills: [String!]!
+    recommendedSkills: [String!]!
+    learningPriority: [LearningPriorityItem!]!
+    summary: String!
 }
 
 type InterviewResult {
@@ -28,8 +36,36 @@ type RoadmapResult {
     steps: [String!]!
 }
 
+type ATSImpact {
+    currentScore: Int
+    expectedScore: Int
+    reason: String
+}
+
+type ExperienceSuggestion {
+    company: String
+    role: String
+    suggestions: [String]
+}
+
+type ProjectSuggestion {
+    project: String
+    suggestions: [String]
+}
+
+type SectionSuggestion {
+    section: String
+    suggestion: String
+}
+
 type ResumeOptimizerResult {
-    optimizedResume: String
+    overallSummary: String
+    atsImpact: ATSImpact
+    keywordSuggestions: [String]
+    experienceSuggestions: [ExperienceSuggestion]
+    projectSuggestions: [ProjectSuggestion]
+    sectionSuggestions: [SectionSuggestion]
+    optimizedContent: String
 }
 
 type CoverLetterResult {
