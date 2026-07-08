@@ -1,4 +1,4 @@
-import { createResume, getResumeById } from "../services/resume.service";
+import { createResume, getResumeById, getAllResumes as getAllResumesService } from "../services/resume.service";
 
 export async function uploadResume(req: any, res: any) {
   try {
@@ -25,6 +25,16 @@ export async function getResume(req: any, res: any) {
     }
 
     return res.json(resume);
+  } catch (error: any) {
+    return res.status(500).json({ error: error.message });
+  }
+}
+
+export async function getAllResumes(req: any, res: any) {
+  try {
+    const userId = req.user.userId;
+    const resumes = await getAllResumesService(userId);
+    return res.json(resumes);
   } catch (error: any) {
     return res.status(500).json({ error: error.message });
   }

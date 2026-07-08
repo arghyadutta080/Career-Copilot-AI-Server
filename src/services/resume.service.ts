@@ -37,3 +37,7 @@ export async function createResume(userId: string, file: any) {
 export async function getResumeById(userId: string, resumeId: string) {
   return await Resume.findOne({ _id: resumeId, userId });
 }
+
+export async function getAllResumes(userId: string) {
+  return await Resume.find({ userId }).sort({ createdAt: -1 });
+}
