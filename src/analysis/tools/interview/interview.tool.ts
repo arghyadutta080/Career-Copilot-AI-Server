@@ -19,7 +19,7 @@ export class InterviewTool {
     sendEvent(state.analysisId, {
       type: "progress",
       step: "Interview Questions",
-      progress: 80,
+      progress: 30,
       message: "Generating interview questions...",
     });
 
@@ -61,7 +61,7 @@ export class InterviewTool {
     sendEvent(state.analysisId, {
       type: "progress",
       step: "Interview Questions",
-      progress: 90,
+      progress: 100,
       message: "Interview questions generated.",
       data: result,
     });

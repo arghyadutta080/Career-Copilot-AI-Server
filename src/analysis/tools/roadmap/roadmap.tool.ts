@@ -18,7 +18,7 @@ export class RoadmapTool {
     sendEvent(state.analysisId, {
       type: "progress",
       step: "Learning Roadmap",
-      progress: 99,
+      progress: 30,
       message: "Generating personalized roadmap...",
     });
 
@@ -50,7 +50,7 @@ export class RoadmapTool {
       type: "progress",
       step: "Learning Roadmap",
       progress: 100,
-      message: "Analysis completed.",
+      message: "Roadmap Generation Completed",
       data: result,
     });
 
