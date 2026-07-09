@@ -8,6 +8,7 @@ import streamRoutes from "./routes/stream.routes";
 import resumeRoutes from "./routes/resume.routes";
 import authRoutes from "./routes/auth.routes";
 import jobDescriptionRoutes from "./routes/jobDescription.routes";
+import analysisRoutes from "./routes/analysis.routes";
 import { errorHandler } from "./middlewares/errorHandler";
 
 const app = express();
@@ -41,6 +42,8 @@ app.use("/api/resumes", resumeRoutes);
 app.use("/api/auth", authRoutes);
 
 app.use("/api/job-descriptions", jobDescriptionRoutes);
+
+app.use("/api/analyses", analysisRoutes);
 
 app.use(errorHandler);
 

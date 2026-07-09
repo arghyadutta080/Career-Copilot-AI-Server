@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import { env } from "../config/env";
+import BlacklistedToken from "../models/BlacklistedToken";
 
 export const context = async ({ req }: any) => {
   const token = req.headers.authorization?.replace("Bearer ", "");
@@ -10,6 +11,14 @@ export const context = async ({ req }: any) => {
     };
 
   try {
+    // Check if token is blacklisted
+    const isBlacklisted = await BlacklistedToken.findOne({ token });
+    if (isBlacklisted) {
+      return {
+        user: null,
+      };
+    }
+
     const decoded = jwt.verify(token, env.jwtSecret);
 
     return {
@@ -21,3 +30,4 @@ export const context = async ({ req }: any) => {
     };
   }
 };
+

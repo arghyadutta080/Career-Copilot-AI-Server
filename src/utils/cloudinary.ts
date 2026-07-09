@@ -45,3 +45,21 @@ export async function uploadToCloudinary(
     uploadStream.end(fileBuffer);
   });
 }
+
+/**
+ * Deletes a raw file from Cloudinary using its public_id
+ * @param publicId The public ID of the file to delete
+ */
+export async function deleteFromCloudinary(publicId: string): Promise<any> {
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader.destroy(
+      publicId,
+      { resource_type: "raw" },
+      (error, result) => {
+        if (error) return reject(error);
+        resolve(result);
+      }
+    );
+  });
+}
+

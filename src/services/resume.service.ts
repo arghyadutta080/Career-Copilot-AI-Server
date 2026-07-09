@@ -3,7 +3,8 @@ import Resume from "../models/Resume";
 import { parsePDF } from "../utils/pdfParser";
 import { parseDOCX } from "../utils/docxParser";
 import { structureResume } from "./parser.service";
-import { uploadToCloudinary } from "../utils/cloudinary";
+import { uploadToCloudinary, deleteFromCloudinary } from "../utils/cloudinary";
+import Analysis from "../models/Analysis";
 
 export async function createResume(userId: string, file: any) {
   const ext = path.extname(file.originalname);
@@ -40,4 +41,28 @@ export async function getResumeById(userId: string, resumeId: string) {
 
 export async function getAllResumes(userId: string) {
   return await Resume.find({ userId }).sort({ createdAt: -1 });
+}
+
+export async function deleteResumeById(userId: string, resumeId: string) {
+  const resume = await Resume.findOne({ _id: resumeId, userId });
+  if (!resume) {
+    return null;
+  }
+
+  // Delete from Cloudinary if filename exists
+  if (resume.filename) {
+    try {
+      await deleteFromCloudinary(resume.filename);
+    } catch (err) {
+      console.error("[Resume Service] Error deleting file from Cloudinary:", err);
+    }
+  }
+
+  // Cascade delete analyses referencing this resume
+  await Analysis.deleteMany({ resumeId, userId });
+
+  // Delete the resume document
+  await Resume.deleteOne({ _id: resumeId, userId });
+
+  return resume;
 }

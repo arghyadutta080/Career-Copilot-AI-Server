@@ -62,4 +62,27 @@ router.get("/:jobId/analyses", auth, async (req: any, res: any) => {
   }
 });
 
+// Route to delete a job description and its associated analyses
+router.delete("/:jobId", auth, async (req: any, res: any) => {
+  try {
+    const userId = req.user.userId;
+    const { jobId } = req.params;
+
+    const jobDescription = await JobDescription.findOne({ _id: jobId, userId });
+    if (!jobDescription) {
+      return res.status(404).json({ error: "Job description not found" });
+    }
+
+    // Cascade delete analyses referencing this job description
+    await Analysis.deleteMany({ jobDescriptionId: jobId, userId });
+
+    // Delete the job description document
+    await JobDescription.deleteOne({ _id: jobId, userId });
+
+    return res.json({ success: true, message: "Job description deleted successfully" });
+  } catch (error: any) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
 export default router;
