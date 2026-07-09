@@ -16,25 +16,50 @@ router.get("/dashboard", auth, async (req: any, res: any) => {
     // Fetch all analyses for this user
     const analyses = await Analysis.find({ userId });
 
-    // Map analyses to their job description
+    // Map analyses to their job description and prune the analysis fields to match GetAnalysisOverview GraphQL schema
     const dashboardData = analyses.map((analysis) => {
       const jobDesc = jobDescriptions.find(
         (job) => job._id.toString() === analysis.jobDescriptionId.toString()
       );
       
-      const analysisObj = analysis.toObject() as any;
-      analysisObj.id = analysisObj._id.toString();
+      const prunedAnalysis = {
+        id: analysis._id.toString(),
+        userId: analysis.userId,
+        resumeId: analysis.resumeId,
+        jobDescriptionId: analysis.jobDescriptionId,
+        status: analysis.status,
+        createdAt: new Date(analysis.createdAt).getTime().toString(),
+        updatedAt: new Date(analysis.updatedAt).getTime().toString(),
+        toolStatus: {
+          ats: analysis.toolStatus?.ats || "not_started",
+          skillGap: analysis.toolStatus?.skillGap || "not_started",
+          optimizer: analysis.toolStatus?.optimizer || "not_started",
+          coverLetter: analysis.toolStatus?.coverLetter || "not_started",
+          interview: analysis.toolStatus?.interview || "not_started",
+          roadmap: analysis.toolStatus?.roadmap || "not_started",
+        },
+        results: {
+          ats: {
+            score: analysis.results?.ats?.score,
+            strengths: analysis.results?.ats?.strengths || [],
+            weaknesses: analysis.results?.ats?.weaknesses || [],
+          },
+          roadmap: {
+            overview: analysis.results?.roadmap?.overview || "",
+          },
+        },
+      };
 
       return {
         jobDescription: jobDesc || null,
-        analysis: analysisObj,
+        analysis: prunedAnalysis,
       };
     });
 
-    // Sort by analysis creation date descending
+    // Sort by analysis creation date descending using UNIX timestamps
     dashboardData.sort((a, b) => {
-      const dateA = new Date(a.analysis.createdAt).getTime();
-      const dateB = new Date(b.analysis.createdAt).getTime();
+      const dateA = parseInt(a.analysis.createdAt, 10);
+      const dateB = parseInt(b.analysis.createdAt, 10);
       return dateB - dateA;
     });
 
