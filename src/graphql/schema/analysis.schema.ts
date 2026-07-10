@@ -45,10 +45,11 @@ type InterviewResult {
 }
 
 type LearningResource {
+  id: String
   title: String
-  type: String
   query: String
   reason: String
+  urls: [String]
 }
 
 type RoadmapStep {

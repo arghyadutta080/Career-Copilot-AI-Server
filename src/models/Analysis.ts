@@ -186,10 +186,11 @@ const AnalysisSchema = new mongoose.Schema(
 
                 resources: [
                   {
+                    id: String,
                     title: String,
-                    type: { type: String },
                     query: String,
                     reason: String,
+                    urls: { type: [String], default: [] },
                   },
                 ],
 

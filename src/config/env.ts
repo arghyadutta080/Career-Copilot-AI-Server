@@ -8,6 +8,7 @@ export const env = {
     jwtSecret: process.env.JWT_SECRET || 'secret',
     googleClientId: process.env.GOOGLE_CLIENT_ID || '',
     googleClientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
+    youtubeApiKey: process.env.YOUTUBE_API_KEY || '',
     geminiKey: process.env.GEMINI_API_KEY || '',
     cloudinaryCloudName: process.env.CLOUDINARY_CLOUD_NAME || '',
     cloudinaryApiKey: process.env.CLOUDINARY_API_KEY || '',

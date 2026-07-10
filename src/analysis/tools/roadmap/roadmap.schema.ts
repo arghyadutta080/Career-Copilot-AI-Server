@@ -1,19 +1,11 @@
 import { z } from "zod";
 
 export const LearningResourceSchema = z.object({
+  id: z.string().optional(),
   title: z.string(),
-  type: z.enum([
-    "Official Docs",
-    "Documentation",
-    "YouTube",
-    "Course",
-    "Blog",
-    "Practice",
-    "Article",
-    "GitHub",
-  ]),
   query: z.string(),
   reason: z.string(),
+  urls: z.array(z.string()).default([]),
 });
 
 export const RoadmapStepSchema = z.object({

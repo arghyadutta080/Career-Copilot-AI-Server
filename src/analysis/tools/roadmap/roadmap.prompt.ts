@@ -101,62 +101,33 @@ Each learning step should contain:
 LEARNING RESOURCES
 ==================================================
 
-Resources MUST be realistic.
+Recommend ONLY YouTube videos.
+Do NOT recommend blogs.
+Do NOT recommend articles.
+Do NOT recommend documentation.
+Do NOT recommend GitHub repositories.
+Do NOT recommend courses.
+Do NOT generate YouTube URLs.
+The backend will automatically search YouTube.
 
-Recommend only well-known resources.
-
-Resource types may include:
-
-- Official Documentation
-- MDN
-- Microsoft Learn
-- Google Developers
-- MongoDB University
-- React Docs
-- TypeScript Handbook
-- Python Docs
-- Node.js Docs
-- Express Docs
-- PostgreSQL Docs
-- Docker Docs
-- Kubernetes Docs
-- LangChain Docs
-- OpenAI Docs
-- Anthropic Docs
-- YouTube
-- FreeCodeCamp
-- GeeksForGeeks
-- NeetCode
-- LeetCode
-- System Design Primer
-- High-quality engineering blogs
-
-Do NOT invent websites.
-
-Do NOT invent URLs.
-
-For every resource provide:
+For every learning resource, return ONLY:
 
 - title
-- type
-- search query
+- query
 - reason
 
-The query should help the frontend search the resource later.
+The search query should be optimized for YouTube search.
 
 Example:
 
 title:
-MongoDB Aggregation Pipeline
-
-type:
-Official Docs
+OAuth 2.0 Authentication
 
 query:
-MongoDB Aggregation Pipeline Documentation
+OAuth 2.0 OpenID Connect Complete Tutorial English
 
 reason:
-Required for backend interview preparation.
+Authentication is required for this role.
 
 ==================================================
 INTERVIEW CHECKLIST
