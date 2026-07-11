@@ -186,14 +186,32 @@ router.post("/:analysisId/questions/:questionId/answer", auth, async (req: any, 
     const categories = ["hr", "resumeBased", "experienceBased", "projectBased", "technical", "coding", "behavioral"];
     let targetQuestion: any = null;
     let foundCategory: string = "";
+    let updatePath = "";
 
+    // 1. Search standard categories
     for (const cat of categories) {
       const list = (analysis.results?.interview as any)?.[cat];
       if (list && Array.isArray(list)) {
-        const q = list.find((item: any) => item.id === questionId);
-        if (q) {
-          targetQuestion = q;
+        const idx = list.findIndex((item: any) => item.id === questionId);
+        if (idx !== -1) {
+          targetQuestion = list[idx];
           foundCategory = cat;
+          updatePath = `results.interview.${cat}.${idx}.answer`;
+          break;
+        }
+      }
+    }
+
+    // 2. Search nested followUps category if not found
+    if (!targetQuestion) {
+      const followUpGroups = analysis.results?.interview?.followUps || [];
+      for (let i = 0; i < followUpGroups.length; i++) {
+        const list = followUpGroups[i].followUps || [];
+        const idx = list.findIndex((item: any) => item.id === questionId);
+        if (idx !== -1) {
+          targetQuestion = list[idx];
+          foundCategory = "followUps";
+          updatePath = `results.interview.followUps.${i}.followUps.${idx}.answer`;
           break;
         }
       }
@@ -207,10 +225,10 @@ router.post("/:analysisId/questions/:questionId/answer", auth, async (req: any, 
       return res.json({ success: false, message: "Already generating" });
     }
 
-    // Mark status as generating in MongoDB
+    // Mark status as generating in MongoDB using index-based pathing
     await Analysis.updateOne(
-      { _id: analysisId, [`results.interview.${foundCategory}.id`]: questionId },
-      { $set: { [`results.interview.${foundCategory}.$.answer.status`]: "generating" } }
+      { _id: analysisId },
+      { $set: { [`${updatePath}.status`]: "generating" } }
     );
 
     // Trigger task asynchronously
@@ -221,7 +239,8 @@ router.post("/:analysisId/questions/:questionId/answer", auth, async (req: any, 
       targetQuestion.question,
       targetQuestion.difficulty || "Medium",
       resume.parsedData,
-      jobDescriptionText
+      jobDescriptionText,
+      updatePath
     );
 
     return res.json({ success: true });

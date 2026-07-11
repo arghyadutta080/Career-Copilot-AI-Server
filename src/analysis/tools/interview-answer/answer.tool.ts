@@ -10,7 +10,8 @@ export async function generateAnswerAsyncTask(
   questionText: string,
   difficulty: string,
   parsedResume: any,
-  jobDescription: string
+  jobDescription: string,
+  updatePath: string
 ) {
   // 1. Emit answer_started event
   sendEvent(analysisId, {
@@ -40,13 +41,17 @@ export async function generateAnswerAsyncTask(
     }
 
     // 2. Persist full answer to MongoDB
+    const queryCond = updatePath.includes("$.answer") 
+      ? { _id: analysisId, [`results.interview.${category}.id`]: questionId }
+      : { _id: analysisId };
+
     await Analysis.updateOne(
-      { _id: analysisId, [`results.interview.${category}.id`]: questionId },
+      queryCond,
       {
         $set: {
-          [`results.interview.${category}.$.answer.content`]: fullAnswer,
-          [`results.interview.${category}.$.answer.status`]: "completed",
-          [`results.interview.${category}.$.answer.generatedAt`]: new Date().toISOString()
+          [`${updatePath}.content`]: fullAnswer,
+          [`${updatePath}.status`]: "completed",
+          [`${updatePath}.generatedAt`]: new Date().toISOString()
         }
       }
     );
@@ -62,11 +67,15 @@ export async function generateAnswerAsyncTask(
     console.error("[generateAnswerAsyncTask] Error:", error);
 
     // 4. Update status to failed in MongoDB
+    const queryCond = updatePath.includes("$.answer") 
+      ? { _id: analysisId, [`results.interview.${category}.id`]: questionId }
+      : { _id: analysisId };
+
     await Analysis.updateOne(
-      { _id: analysisId, [`results.interview.${category}.id`]: questionId },
+      queryCond,
       {
         $set: {
-          [`results.interview.${category}.$.answer.status`]: "failed"
+          [`${updatePath}.status`]: "failed"
         }
       }
     );
