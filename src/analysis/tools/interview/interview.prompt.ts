@@ -63,36 +63,44 @@ QUESTION DISTRIBUTION
 ==================================================
 
 HR Questions:
-3
-
-Resume Based:
-4
-
-Experience Based:
-4
-
-Project Based:
-4
+0 (Always generate exactly 0 questions; return an empty list)
 
 Behavioral:
-3
+0 (Always generate exactly 0 questions; return an empty list)
+
+Resume Based:
+Dynamically varies from 2 to 7 questions based on the candidate's resume weightage and richness (assessing tech-stack, projects, and experience):
+• If the resume has a rich tech-stack, diverse projects, and significant experience, generate more questions (up to 7).
+• If the resume is for a college student, fresher, or lacks a strong tech stack/good projects/experience, generate fewer questions (down to 2).
+
+Experience Based:
+Dynamically varies from 2 to 7 questions. Follow the same resume weightage and richness rules as Resume Based questions.
+
+Project Based:
+Dynamically varies from 2 to 7 questions. Follow the same resume weightage and richness rules as Resume Based questions.
 
 Follow-up Groups:
-2 parent questions
+Dynamically varies from 2 to 7 parent questions (with follow-ups). Follow the same resume weightage and richness rules as Resume Based questions.
 
 Technical:
-20
+Generate between 25 and 50 questions, determined strictly by the job description requirements and required skills.
 
 Coding:
-10
+Generate between 20 and 30 questions, ranging from Easy to Hard difficulty depending on the job description requirements.
 
 ==================================================
 TECHNICAL QUESTIONS
 ==================================================
 
-Generate questions based ONLY on technologies and concepts relevant to this candidate.
+Generate between 20 and 50 technical questions.
 
-Topics may include (when applicable):
+Guidelines:
+1. Base questions strictly on the Job Description and the skills/technologies required for the job.
+2. Ask relevant questions ONLY to the job requirements.
+3. If the candidate has extra skills or technologies in their resume/profile that are NOT required by this job description, AVOID asking about them in this Technical section (such candidate-specific extra skills should only be addressed in the Resume/Experience/Project sections, not here).
+4. Ensure questions target the concepts/technologies required for the target role as defined by the Job Description.
+
+Topics may include (when applicable and required for the job):
 
 • Programming Languages
 • Frameworks
@@ -116,13 +124,18 @@ Topics may include (when applicable):
 • CI/CD
 • Distributed Systems
 
-Choose topics dynamically based on the resume and job description.
+Choose topics dynamically based on the job description requirements and candidate's relevant skills.
 
 ==================================================
 CODING QUESTIONS
 ==================================================
 
-Generate practical coding questions relevant to the target role.
+Generate between 15 and 30 practical coding questions relevant to the target role.
+
+Guidelines:
+1. Base coding questions on the Job Description requirements and target role, not just the candidate's existing tech-stack.
+2. Ask relevant coding questions ONLY to the job requirements.
+3. If the candidate has extra skills, languages, or technologies that are NOT required by this job description, AVOID asking coding questions on them (these can be discussed in Resume/Experience/Project sections if relevant, but not here).
 
 Questions may cover:
 
@@ -139,7 +152,7 @@ Questions may cover:
 • Database Queries
 • Concurrency
 
-Assign one of the following difficulty levels:
+Assign one of the following difficulty levels based on the job description requirements (ranging from Easy to Hard):
 
 Easy
 Medium
