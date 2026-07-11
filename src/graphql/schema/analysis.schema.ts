@@ -151,31 +151,6 @@ type Analysis {
     updatedAt: String!
 }
 
-type Mutation {
-
-    createAnalysis(
-        resumeId: ID!
-        jobDescriptionId: ID!
-    ): Analysis
-
-    startAnalysis(
-        analysisId: ID!
-    ): Boolean!
-
-    generateInterviewQuestions(
-        analysisId: ID!
-    ): Boolean!
-
-    generateLearningRoadmap(
-        analysisId: ID!
-    ): Boolean!
-
-    generateInterviewAnswer(
-        analysisId: ID!
-        questionId: ID!
-    ): Boolean!
-}
-
 type Query {
 
     getAnalysis(

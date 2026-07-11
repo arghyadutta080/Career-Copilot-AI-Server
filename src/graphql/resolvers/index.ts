@@ -4,8 +4,4 @@ export const resolvers = {
   Query: {
     ...analysisResolver.Query,
   },
-
-  Mutation: {
-    ...analysisResolver.Mutation,
-  },
 };
