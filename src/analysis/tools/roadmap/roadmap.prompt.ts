@@ -2,6 +2,7 @@ import { ATSResult } from "../ats/ats.schema";
 import { SkillGapResult } from "../skill-gap/skillGap.schema";
 import { ResumeOptimizerResult } from "../resume-optimizer/optimizer.schema";
 import { InterviewResult } from "../interview/interview.schema";
+import { pruneInterview } from "../../utils/pruneInterview";
 
 export function buildRoadmapPrompt(
   parsedResume: any,
@@ -13,6 +14,9 @@ export function buildRoadmapPrompt(
   optimizer: ResumeOptimizerResult,
   interview: InterviewResult,
 ) {
+  // eliminating answers from question before sending into prompt
+  const prunedInterview = pruneInterview(interview);
+
   return `
 You are a Senior Engineering Mentor and Technical Interview Coach.
 
@@ -62,7 +66,7 @@ ${JSON.stringify(optimizer, null, 2)}
 INTERVIEW QUESTIONS
 ==================================================
 
-${JSON.stringify(interview, null, 2)}
+${JSON.stringify(prunedInterview, null, 2)}
 
 ==================================================
 OBJECTIVE
