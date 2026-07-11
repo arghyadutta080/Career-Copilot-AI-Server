@@ -24,6 +24,7 @@ export const ResumeStructuredSchema = z.object({
         company: z.string().optional(),
         role: z.string().optional(),
         duration: z.string().optional(),
+        responsibilities: z.array(z.string()).default([]),
       }),
     )
     .default([]),
@@ -36,6 +37,10 @@ export const ResumeStructuredSchema = z.object({
       }),
     )
     .default([]),
+
+  certifications: z.array(z.string()).default([]),
+
+  achievements: z.array(z.string()).default([]),
 });
 
 export type ResumeStructured = z.infer<typeof ResumeStructuredSchema>;

@@ -46,6 +46,7 @@ const ResumeSchema = new mongoose.Schema(
           company: String,
           role: String,
           duration: String,
+          responsibilities: [String],
         },
       ],
 
@@ -55,6 +56,10 @@ const ResumeSchema = new mongoose.Schema(
           degree: String,
         },
       ],
+
+      certifications: [String],
+
+      achievements: [String],
     },
 
     isActive: {

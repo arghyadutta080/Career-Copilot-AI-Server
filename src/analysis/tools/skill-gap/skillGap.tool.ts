@@ -25,7 +25,7 @@ export class SkillGapTool {
     });
 
     const result = await structuredLLM.invoke(
-      buildSkillGapPrompt(state.rawResume, state.jobDescription),
+      buildSkillGapPrompt(state.parsedResume, state.jobDescription),
     );
 
     await Analysis.findByIdAndUpdate(state.analysisId, {

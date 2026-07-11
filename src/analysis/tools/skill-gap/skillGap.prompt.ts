@@ -1,4 +1,4 @@
-export function buildSkillGapPrompt(resume: string, jobDescription: string) {
+export function buildSkillGapPrompt(parsedResume: any, jobDescription: string) {
   return `
 You are an experienced engineering hiring manager.
 
@@ -14,9 +14,9 @@ Identify:
 
 4. Give a concise summary.
 
-Resume:
+Candidate Profile (Structured Resume):
 
-${resume}
+${JSON.stringify(parsedResume, null, 2)}
 
 ----------------------
 
