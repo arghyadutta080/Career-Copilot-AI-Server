@@ -20,12 +20,18 @@ type SkillGapResult {
     summary: String!
 }
 
+type InterviewAnswer {
+    content: String
+    status: String
+    generatedAt: String
+}
+
 type InterviewQuestion {
     id: String
     question: String
     difficulty: String
     topics: [String]
-    answer: String
+    answer: InterviewAnswer
 }
 
 type InterviewFollowUp {
@@ -162,6 +168,11 @@ type Mutation {
 
     generateLearningRoadmap(
         analysisId: ID!
+    ): Boolean!
+
+    generateInterviewAnswer(
+        analysisId: ID!
+        questionId: ID!
     ): Boolean!
 }
 

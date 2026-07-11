@@ -11,11 +11,19 @@ router.get(
   (req, res) => {
     const id = req.params.analysisId;
 
-    res.writeHead(200, {
+    // Use res.set() instead of res.writeHead() so the CORS middleware
+    // (which runs before this handler) keeps the Access-Control-Allow-Origin
+    // headers it already set. res.writeHead() would overwrite those headers.
+    res.set({
       "Content-Type": "text/event-stream",
       "Cache-Control": "no-cache",
-      Connection: "keep-alive",
+      "Connection": "keep-alive",
+      "X-Accel-Buffering": "no", // Disable nginx buffering if behind a proxy
     });
+    res.flushHeaders(); // Flush headers immediately to start the SSE stream
+
+    // Send a heartbeat comment so the browser recognises the connection is live
+    res.write(": heartbeat\n\n");
 
     addClient(id, res);
 

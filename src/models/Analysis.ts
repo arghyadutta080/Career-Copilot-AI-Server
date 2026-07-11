@@ -1,5 +1,26 @@
 import mongoose from "mongoose";
 
+const QuestionAnswerSchema = {
+  content: { type: String, default: null },
+  status: {
+    type: String,
+    enum: ["not_started", "generating", "completed", "failed"],
+    default: "not_started"
+  },
+  generatedAt: { type: String, default: null }
+};
+
+const InterviewQuestionSchema = {
+  id: String,
+  question: String,
+  difficulty: String,
+  topics: [String],
+  answer: {
+    type: QuestionAnswerSchema,
+    default: () => ({ content: null, status: "not_started", generatedAt: null })
+  }
+};
+
 const AnalysisSchema = new mongoose.Schema(
   {
     userId: {
@@ -86,84 +107,17 @@ const AnalysisSchema = new mongoose.Schema(
       },
 
       interview: {
-        hr: [
-          {
-            id: String,
-            question: String,
-            difficulty: String,
-            topics: [String],
-            answer: String,
-          },
-        ],
-
-        resumeBased: [
-          {
-            id: String,
-            question: String,
-            topics: [String],
-            answer: String,
-          },
-        ],
-
-        experienceBased: [
-          {
-            id: String,
-            question: String,
-            topics: [String],
-            answer: String,
-          },
-        ],
-
-        projectBased: [
-          {
-            id: String,
-            question: String,
-            topics: [String],
-            answer: String,
-          },
-        ],
-
-        technical: [
-          {
-            id: String,
-            question: String,
-            difficulty: String,
-            topics: [String],
-            answer: String,
-          },
-        ],
-
-        coding: [
-          {
-            id: String,
-            question: String,
-            difficulty: String,
-            topics: [String],
-            answer: String,
-          },
-        ],
-
-        behavioral: [
-          {
-            id: String,
-            question: String,
-            topics: [String],
-            answer: String,
-          },
-        ],
-
+        hr: [InterviewQuestionSchema],
+        resumeBased: [InterviewQuestionSchema],
+        experienceBased: [InterviewQuestionSchema],
+        projectBased: [InterviewQuestionSchema],
+        technical: [InterviewQuestionSchema],
+        coding: [InterviewQuestionSchema],
+        behavioral: [InterviewQuestionSchema],
         followUps: [
           {
             parentQuestion: String,
-            followUps: [
-              {
-                id: String,
-                question: String,
-                difficulty: String,
-                topics: [String],
-                answer: String,
-              },
-            ],
+            followUps: [InterviewQuestionSchema],
           },
         ],
       },

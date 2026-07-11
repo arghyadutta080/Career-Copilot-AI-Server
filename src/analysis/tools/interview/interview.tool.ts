@@ -38,17 +38,24 @@ export class InterviewTool {
       ),
     )) as InterviewResult;
 
-    result.hr = assignIds(result.hr);
-    result.resumeBased = assignIds(result.resumeBased);
-    result.experienceBased = assignIds(result.experienceBased);
-    result.projectBased = assignIds(result.projectBased);
-    result.technical = assignIds(result.technical);
-    result.coding = assignIds(result.coding);
-    result.behavioral = assignIds(result.behavioral);
+    const prepareQuestions = (questions: any[]) => {
+      return assignIds(questions || []).map((q: any) => ({
+        ...q,
+        answer: q.answer || { content: null, status: "not_started", generatedAt: null }
+      }));
+    };
 
-    result.followUps = result.followUps.map((group) => ({
+    result.hr = prepareQuestions(result.hr);
+    result.resumeBased = prepareQuestions(result.resumeBased);
+    result.experienceBased = prepareQuestions(result.experienceBased);
+    result.projectBased = prepareQuestions(result.projectBased);
+    result.technical = prepareQuestions(result.technical);
+    result.coding = prepareQuestions(result.coding);
+    result.behavioral = prepareQuestions(result.behavioral);
+
+    result.followUps = (result.followUps || []).map((group) => ({
       ...group,
-      followUps: assignIds(group.followUps),
+      followUps: prepareQuestions(group.followUps),
     }));
 
     await Analysis.findByIdAndUpdate(state.analysisId, {
