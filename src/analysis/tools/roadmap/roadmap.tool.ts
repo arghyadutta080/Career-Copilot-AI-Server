@@ -24,7 +24,7 @@ export class RoadmapTool {
       message: "Generating personalized roadmap...",
     });
 
-    const structuredLLM = llm.withStructuredOutput(LearningRoadmapSchema).withConfig({
+    const structuredLLM = llm.gemini35Flash.withStructuredOutput(LearningRoadmapSchema).withConfig({
       runName: "Roadmap Generation Tool",
     });
 

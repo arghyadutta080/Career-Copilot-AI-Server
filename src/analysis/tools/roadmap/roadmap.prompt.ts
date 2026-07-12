@@ -88,7 +88,9 @@ Avoid teaching topics the candidate already demonstrates strong proficiency in u
 ROADMAP DESIGN
 ==================================================
 
-Create 4–6 milestones.
+Create up to 6 milestones (aim for 4–6 milestones representing the maximum needed topics for the interview). Do NOT create unnecessary or generic milestones; create ONLY the ones strictly required for the candidate to succeed in the target interview based on their profile, skill gaps, and job requirements.
+
+Do not hallucinate topics, frameworks, or languages that are not mentioned in the job description or candidate profile. Ensure every milestone addresses a real gap or interview topic relevant to this job role.
 
 Each milestone should contain 3–6 learning steps.
 
@@ -143,7 +145,7 @@ Generate a concise checklist that the candidate should revise before interviews.
 STRICT RULES
 ==================================================
 
-Do not hallucinate.
+Do not hallucinate any topics, technologies, or requirements that are not present in the provided Job Description, Candidate Profile, or Skill Gap data.
 
 Do not recommend random resources.
 

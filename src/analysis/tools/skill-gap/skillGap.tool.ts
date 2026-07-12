@@ -20,7 +20,7 @@ export class SkillGapTool {
       message: "Analyzing missing skills...",
     });
 
-    const structuredLLM = llm.withStructuredOutput(SkillGapSchema).withConfig({
+    const structuredLLM = llm.gemini35Flash.withStructuredOutput(SkillGapSchema).withConfig({
       runName: "Skill Gap Detection Tool",
     });
 

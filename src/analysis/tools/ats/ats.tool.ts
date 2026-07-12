@@ -20,7 +20,7 @@ export class ATSTool {
       progress: 10,
     });
 
-    const structuredLLM = llm.withStructuredOutput(ATSResultSchema).withConfig({
+    const structuredLLM = llm.gemini35Flash.withStructuredOutput(ATSResultSchema).withConfig({
       runName: "ATS Score Calculation Tool",
     });
 

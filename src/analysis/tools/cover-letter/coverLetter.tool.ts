@@ -22,7 +22,7 @@ export class CoverLetterTool {
       message: "Generating cover letter...",
     });
 
-    const structuredLLM = llm.withStructuredOutput(CoverLetterSchema).withConfig({
+    const structuredLLM = llm.gemini31FlashLite.withStructuredOutput(CoverLetterSchema).withConfig({
       runName: "Cover Letter Generation Tool",
     });
 

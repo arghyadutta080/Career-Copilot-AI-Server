@@ -22,7 +22,7 @@ export class ResumeOptimizerTool {
       message: "Optimizing resume...",
     });
 
-    const structuredLLM = llm.withStructuredOutput(ResumeOptimizerSchema).withConfig({
+    const structuredLLM = llm.gemini35Flash.withStructuredOutput(ResumeOptimizerSchema).withConfig({
       runName: "Resume Optimization Tool",
     });
 

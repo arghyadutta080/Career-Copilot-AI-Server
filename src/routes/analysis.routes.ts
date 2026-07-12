@@ -122,6 +122,10 @@ router.post("/:analysisId/start", auth, async (req: any, res: any) => {
       return res.status(404).json({ error: "Analysis not found" });
     }
 
+    if (analysis.status === "completed") {
+      return res.json({ success: false, message: "Analysis is already completed" });
+    }
+
     void startAnalysis(analysisId);
     return res.json({ success: true });
   } catch (error: any) {
@@ -140,6 +144,10 @@ router.post("/:analysisId/interview", auth, async (req: any, res: any) => {
       return res.status(404).json({ error: "Analysis not found" });
     }
 
+    if (analysis.toolStatus?.interview === "completed") {
+      return res.json({ success: false, message: "Interview questions already generated" });
+    }
+
     void generateInterviewQuestions(analysisId);
     return res.json({ success: true });
   } catch (error: any) {
@@ -156,6 +164,10 @@ router.post("/:analysisId/roadmap", auth, async (req: any, res: any) => {
     const analysis = await Analysis.findOne({ _id: analysisId, userId: req.user.userId });
     if (!analysis) {
       return res.status(404).json({ error: "Analysis not found" });
+    }
+
+    if (analysis.toolStatus?.roadmap === "completed") {
+      return res.json({ success: false, message: "Learning roadmap already generated" });
     }
 
     void generateLearningRoadmap(analysisId);
@@ -219,6 +231,13 @@ router.post("/:analysisId/questions/:questionId/answer", auth, async (req: any, 
 
     if (!targetQuestion) {
       return res.status(404).json({ error: "Question not found" });
+    }
+
+    if (
+      targetQuestion.answer?.status === "completed" ||
+      (targetQuestion.answer?.content && targetQuestion.answer.content.trim() !== "")
+    ) {
+      return res.json({ success: false, message: "Answer already generated" });
     }
 
     if (targetQuestion.answer?.status === "generating") {

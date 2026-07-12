@@ -24,7 +24,7 @@ export async function generateAnswerAsyncTask(
     const prompt = buildAnswerPrompt(parsedResume, jobDescription, questionText, category, difficulty);
 
     let fullAnswer = "";
-    const stream = await llm.stream(prompt);
+    const stream = await llm.gemini31FlashLite.stream(prompt);
 
     for await (const chunk of stream) {
       const token = chunk.content;

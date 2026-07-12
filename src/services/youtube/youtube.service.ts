@@ -16,7 +16,7 @@ export async function searchVideos(query: string): Promise<string[]> {
   const url = new URL("https://www.googleapis.com/youtube/v3/search");
   url.searchParams.append("part", "snippet");
   url.searchParams.append("type", "video");
-  url.searchParams.append("maxResults", "2");
+  url.searchParams.append("maxResults", "3");
   url.searchParams.append("order", "relevance");
   url.searchParams.append("q", query);
   url.searchParams.append("relevanceLanguage", "en");

@@ -23,7 +23,7 @@ export class InterviewTool {
       message: "Generating interview questions...",
     });
 
-    const structuredLLM = llm.withStructuredOutput(InterviewResultSchema).withConfig({
+    const structuredLLM = llm.gemini35Flash.withStructuredOutput(InterviewResultSchema).withConfig({
       runName: "Interview Questions Generation Tool",
     });
 
