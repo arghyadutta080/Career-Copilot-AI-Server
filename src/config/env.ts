@@ -19,3 +19,11 @@ export const env = {
     langsmithProject: process.env.LANGSMITH_PROJECT || '',
     allowedOrigins: process.env.ALLOWED_ORIGINS || "http://localhost:3000,http://localhost:3001",
 };
+
+export const PLAN_LIMITS = {
+  FREE: Number(process.env.FREE_ANALYSIS_LIMIT) || 3,
+  PRO: Number(process.env.PRO_ANALYSIS_LIMIT) || 100,
+  ENTERPRISE: Number(process.env.ENTERPRISE_ANALYSIS_LIMIT) || 999999,
+} as const;
+
+export type Plan = keyof typeof PLAN_LIMITS;

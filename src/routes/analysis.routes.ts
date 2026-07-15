@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { auth } from "../middlewares/auth";
+import { checkAnalysisQuota } from "../middlewares/checkAnalysisQuota";
 import Analysis from "../models/Analysis";
 import Resume from "../models/Resume";
 import JobDescription from "../models/JobDescription";
@@ -10,8 +11,20 @@ import {
   startAnalysis,
 } from "../analysis/services/analysis.service";
 import { generateAnswerAsyncTask } from "../analysis/tools/interview-answer/answer.tool";
+import { getUsage, recordAnalysisCreated } from "../services/usage.service";
 
 const router = Router();
+
+// Route to get current user's usage / quota summary
+router.get("/usage", auth, async (req: any, res: any) => {
+  try {
+    const userId = req.user.userId;
+    const usage = await getUsage(userId);
+    return res.json(usage);
+  } catch (error: any) {
+    return res.status(500).json({ error: error.message });
+  }
+});
 
 // Route to get dashboard overview of job descriptions and analyses
 router.get("/dashboard", auth, async (req: any, res: any) => {
@@ -96,11 +109,16 @@ router.delete("/:analysisId", auth, async (req: any, res: any) => {
 });
 
 // Route to create a new analysis
-router.post("/", auth, async (req: any, res: any) => {
+// checkAnalysisQuota enforces the per-plan lifetime analysis limit before creation.
+router.post("/", auth, checkAnalysisQuota, async (req: any, res: any) => {
   try {
     const { resumeId, jobDescriptionId } = req.body;
     const analysis = await createAnalysis(req.user.userId, resumeId, jobDescriptionId);
-    
+
+    // Record the creation immediately after the document exists.
+    // This runs async but we await it before responding to keep quota accurate.
+    await recordAnalysisCreated(req.user.userId, analysis._id.toString());
+
     // Return pruned output to match what frontend expects
     return res.status(201).json({
       id: analysis._id.toString(),
