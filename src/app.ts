@@ -9,6 +9,7 @@ import resumeRoutes from "./routes/resume.routes";
 import authRoutes from "./routes/auth.routes";
 import jobDescriptionRoutes from "./routes/jobDescription.routes";
 import analysisRoutes from "./routes/analysis.routes";
+import jobImportRoutes from "./routes/jobImport.routes";
 import { errorHandler } from "./middlewares/errorHandler";
 
 const app = express();
@@ -26,7 +27,7 @@ app.use(
       }
     },
     credentials: true,
-  })
+  }),
 );
 
 app.use(express.json());
@@ -44,6 +45,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/job-descriptions", jobDescriptionRoutes);
 
 app.use("/api/analyses", analysisRoutes);
+
+app.use("/api/job", jobImportRoutes);
 
 app.use(errorHandler);
 
