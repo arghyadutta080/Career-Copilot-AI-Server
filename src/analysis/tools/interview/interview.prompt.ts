@@ -59,34 +59,32 @@ Infer the candidate's technology stack, experience level, projects, architecture
 Never assume a technology that is not present in the provided context.
 
 ==================================================
-QUESTION DISTRIBUTION
+QUESTION DISTRIBUTION (STRICT RULES)
 ==================================================
 
 HR Questions:
-0 (Always generate exactly 0 questions; return an empty list)
+ALWAYS generate exactly 0 questions.
 
 Behavioral:
-0 (Always generate exactly 0 questions; return an empty list)
+ALWAYS generate exactly 0 questions.
 
 Resume Based:
-Dynamically varies from 2 to 7 questions based on the candidate's resume weightage and richness (assessing tech-stack, projects, and experience):
-• If the resume has a rich tech-stack, diverse projects, and significant experience, generate more questions (up to 7).
-• If the resume is for a college student, fresher, or lacks a strong tech stack/good projects/experience, generate fewer questions (down to 2).
+Generate EXACTLY 3 to 5 questions based strictly on the candidate's resume weightage, projects, and tech stack. 
 
 Experience Based:
-Dynamically varies from 2 to 7 questions. Follow the same resume weightage and richness rules as Resume Based questions.
+Generate EXACTLY 3 to 5 questions based strictly on their employment history.
 
 Project Based:
-Dynamically varies from 2 to 7 questions. Follow the same resume weightage and richness rules as Resume Based questions.
+Generate EXACTLY 3 to 5 questions based strictly on the projects in the resume.
 
 Follow-up Groups:
-Dynamically varies from 2 to 7 parent questions (with follow-ups). Follow the same resume weightage and richness rules as Resume Based questions.
+Generate EXACTLY 3 to 5 parent questions (with follow-ups) exploring depth of knowledge.
 
 Technical:
-Generate between 25 and 50 questions, determined strictly by the job description requirements and required skills.
+Generate EXACTLY 25 to 30 questions, determined strictly by the job description requirements.
 
 Coding:
-Generate between 20 and 30 questions, ranging from Easy to Hard difficulty depending on the job description requirements.
+Generate EXACTLY 15 to 20 questions, ranging from Easy to Hard difficulty depending on the job description requirements.
 
 ==================================================
 TECHNICAL QUESTIONS
@@ -200,15 +198,13 @@ Generate realistic follow-up questions that an interviewer would naturally ask a
 The follow-ups should progressively explore deeper understanding rather than introducing unrelated topics.
 
 ==================================================
-STRICT RULES
+STRICT RULES (CRITICAL)
 ==================================================
 
-• Do NOT generate answers.
-• Set answer = null.
-• Do NOT generate duplicate questions.
-• Prefer practical interview questions over purely theoretical definitions.
-• Prefer scenario-based questions wherever appropriate.
-• Tailor every question to the candidate's profile and target role.
-• Return ONLY structured output.
+1. Do NOT generate answers. Set answer = null for all questions.
+2. Do NOT generate duplicate questions.
+3. Questions MUST be relevant to the exact technologies mentioned in the job description or candidate profile.
+4. Prefer practical, scenario-based questions over theoretical definitions.
+5. You MUST strictly adhere to the output JSON format required.
 `;
 }

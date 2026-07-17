@@ -9,24 +9,24 @@ export function buildAnswerPrompt(
 
   let instructionsText = "";
   if (lowercaseCategory === "coding") {
-    instructionsText = `Provide a comprehensive answer in clean Markdown format. Since this is a coding question, the answer MUST only include the following sections in order:
+    instructionsText = `CRITICAL: You MUST provide the answer in clean Markdown format. Since this is a coding question, your answer MUST EXACTLY AND ONLY include the following sections in order:
 
 1. **Code Implementation**:
-   - Provide a high-standard, clean, and production-ready code implementation (following best practices, correct types, proper syntax, and standard conventions) because the interviewer will review it.
+   - Provide a high-standard, clean, and production-ready code implementation (following best practices, correct types, proper syntax, and standard conventions).
 
 2. **Code Explanation**:
-   - Provide a clear, step-by-step technical explanation of the implemented code, its logic, and its time/space complexity (Big O).
+   - Provide a clear, step-by-step technical explanation of the implemented code, its logic, and its exact time/space complexity (Big O).
 
-Do NOT include sections like "Ideal Interview Answer" or "Practical Examples" for coding questions. Only write the code and explanation for that code.`;
+YOU MUST NOT include sections like "Ideal Interview Answer" or "Practical Examples" for coding questions. ONLY write the code and explanation.`;
   } else {
     // Custom instructions for Code Examples based on the question category
     let codeInstructions = "";
     if (lowercaseCategory === "technical") {
       codeInstructions = `
-4. **Code Examples**: Provide a simplified/instructive coding example purely to help the candidate understand the concept (keep it clear and educational).`;
+4. **Code Examples**: Provide a strictly necessary, simplified coding snippet to help the candidate understand the concept.`;
     } else {
       codeInstructions = `
-Do NOT include any **Code Examples** or code snippet blocks for this category ("${category}"). Focus purely on the verbal/conceptual explanation.`;
+CRITICAL: Do NOT include any **Code Examples** or code snippet blocks for this category ("${category}"). Focus ONLY on the verbal/conceptual explanation.`;
     }
 
     instructionsText = `Provide a comprehensive answer in clean Markdown format. The answer MUST include the following sections in order:
@@ -72,6 +72,13 @@ INSTRUCTIONS
 ==================================================
 ${instructionsText}
 
-Return ONLY clean markdown. Do not wrap it in JSON. Do not include markdown code block tags (\`\`\`markdown ... \`\`\`) around the entire response. Start directly with the markdown content.
+==================================================
+STRICT RULES (CRITICAL)
+==================================================
+1. Do NOT invent scenarios or technologies that contradict the candidate's resume or the job description.
+2. Maintain a highly professional and encouraging tone.
+3. Return ONLY clean markdown.
+4. Do NOT wrap the output in a JSON object.
+5. Do NOT include markdown code block tags (\`\`\`markdown ... \`\`\`) around the entire response. Start directly with the markdown content.
 `;
 }

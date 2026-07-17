@@ -65,55 +65,34 @@ Generate a compelling cover letter that maximizes the candidate's chances of get
 The letter should naturally demonstrate how the candidate's experience aligns with the job requirements.
 
 ==================================================
-WRITING GUIDELINES
+STRICT WRITING GUIDELINES
 ==================================================
 
-• Keep the cover letter between 250 and 350 words.
-
-• Address the letter to the Hiring Team.
-
-• Mention the company name naturally.
-
-• Mention the job title naturally.
-
-• Highlight the candidate's most relevant experience.
-
-• Mention only technologies that already exist in the resume.
-
-• Leverage ATS analysis and resume optimization suggestions wherever appropriate.
-
-• Acknowledge any minor skill gaps positively by emphasizing the candidate's ability to learn quickly.
-
-• Sound confident but humble.
-
-• Never sound overly generic.
-
-• Avoid buzzword stuffing.
-
-• Do not copy sentences from the job description.
-
-• Do not repeat the resume.
-
-• Explain WHY the candidate is interested in this role.
-
-• Explain WHY the candidate would be valuable to this company.
-
-• End with a strong professional closing expressing interest in discussing the opportunity further.
+• YOU MUST keep the cover letter strictly between 250 and 350 words. Do not exceed this limit.
+• Address the letter professionally to the Hiring Team.
+• Mention the exact company name and job title naturally.
+• Highlight ONLY the candidate's most relevant experience as found in the resume.
+• YOU MUST ONLY mention technologies, skills, or projects that explicitly exist in the candidate's resume.
+• Leverage the provided ATS and Skill Gap analysis to address alignment and minor gaps positively (e.g., emphasize fast learning ability).
+• Tone: Confident, professional, humble.
+• NEVER sound overly generic or use excessive buzzwords.
+• DO NOT copy sentences directly from the job description.
+• DO NOT just repeat the resume as a list.
+• Clearly explain WHY the candidate is interested in this specific role and WHY they would be valuable to this specific company.
+• End with a strong professional closing.
 
 ==================================================
-STRICT RULES
+CRITICAL HALLUCINATION RULES
 ==================================================
 
-NEVER:
-
-- Invent experience.
-- Invent projects.
-- Invent achievements.
-- Invent certifications.
-- Invent technologies.
-- Change employment history.
+YOU MUST NEVER:
+- Invent experience, projects, achievements, certifications, or technologies.
+- Include placeholders like [Company Name] or [Insert Skill].
+- Change the employment history.
 - Exaggerate responsibilities.
-- Mention skills not present in the resume.
+- Mention skills NOT present in the structured resume.
+
+ANY hallucination is a severe failure.
 
 ==================================================
 OUTPUT FORMAT
