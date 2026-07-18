@@ -1,6 +1,6 @@
 # Career Copilot Backend Server - Architecture & API Guide
 
-Welcome to the backend reference guide and documentation for the **Career Copilot Server**. This service runs an Express server in TypeScript, exposing GraphQL endpoints (via Apollo Server), traditional REST APIs, and a Server-Sent Events (SSE) streaming engine. It leverages LangChain and Gemini (`gemini-3.1-pro-preview`) to perform intelligent resume parsing, ATS scoring, skill-gap analysis, optimization proposals, cover letter design, customized interview prep questions, and career roadmap generation.
+Welcome to the backend reference guide and documentation for the **Career Copilot Server**. This service runs an Express server in TypeScript, exposing GraphQL endpoints (via Apollo Server), traditional REST APIs, and a Server-Sent Events (SSE) streaming engine. It leverages LangChain and Gemini (`gemini-3.5-flash` & `gemini-3.1-flash-lite`) to perform intelligent resume parsing, ATS scoring, skill-gap analysis, optimization proposals, cover letter design, customized interview prep questions, career roadmap generation, and on-demand streaming of interview answers.
 
 ---
 
@@ -22,7 +22,7 @@ Welcome to the backend reference guide and documentation for the **Career Copilo
 - **Web framework**: Express (v5)
 - **GraphQL Engine**: Apollo Server (v5) + `@as-integrations/express5`
 - **Database**: MongoDB + Mongoose ODM
-- **AI / LLM Orchestration**: LangChain (`@langchain/google-genai`), targeting `gemini-3.1-pro-preview` with strict structured outputs via Zod schemas.
+- **AI / LLM Orchestration**: LangChain (`@langchain/google-genai`), targeting `gemini-3.1-pro-preview` for deep analysis and `gemini-3.1-flash-lite` for high-speed streaming tasks.
 - **File Upload / Storage**: Multer (Memory Storage) & Cloudinary SDK
 - **Document Parsers**: `pdf-parse` & `mammoth` (DOCX content extraction)
 - **Token Authorization**: Custom JWT middleware
@@ -39,6 +39,7 @@ graph TD
     
     subgraph Express Router & Middleware
         Express -->|Auth JWT Middleware| Auth[Auth Guard]
+        Express -->|Quota & Usage Middleware| Quota[Usage Tracker]
         Express -->|Multer Memory| Upload[Upload Route]
         Express -->|SSE Route| SSERoute[Stream Endpoint]
     end
@@ -57,6 +58,7 @@ graph TD
     subgraph Data Layer
         StructureResume & Cloudinary -->|Store Resume| DB[(MongoDB)]
         ToolRunner -->|Store Tool Results & Status| DB
+        Quota -->|Update User Usage| DB
         SSERoute -->|Read status| DB
     end
 
@@ -68,7 +70,7 @@ graph TD
 
 ## Database Models (Mongoose Schemas)
 
-The codebase defines four primary collections. Click the links below to view their source file definitions:
+The codebase defines five primary collections. Click the links below to view their source file definitions:
 
 ### 1. User Schema ([User.ts](file:///d:/Coding%20files/Career%20Copilot%20AI/career-copilot-server/src/models/User.ts))
 Stores information about the candidate.
@@ -78,14 +80,17 @@ Stores information about the candidate.
 *   `avatar`: String (Profile photo URL)
 *   `currentRole`: String (Default: `""`)
 *   `experience`: Number (Default: `0`)
-*   `preferences`: Subdocument
-    *   `targetRole`: String
-    *   location: String
-    *   remote: Boolean
-    *   `expectedSalary`: Number
+*   `preferences`: Subdocument (Target Role, Location, Remote, Expected Salary)
 *   `timestamps`: Created at, Updated at
 
-### 2. Resume Schema ([Resume.ts](file:///d:/Coding%20files/Career%20Copilot%20AI/career-copilot-server/src/models/Resume.ts))
+### 2. UserUsage Schema ([UserUsage.ts](file:///d:/Coding%20files/Career%20Copilot%20AI/career-copilot-server/src/models/UserUsage.ts))
+Tracks the user's subscription plan and analysis generation quotas.
+*   `userId`: ObjectId (Ref: `User`, Required)
+*   `plan`: `"FREE" | "PRO" | "ENTERPRISE"` (Default: `"FREE"`)
+*   `analysisCreated`: Number (Count of analyses generated)
+*   `createdAnalysisIds`: Array of ObjectIds (Ref: `Analysis`)
+
+### 3. Resume Schema ([Resume.ts](file:///d:/Coding%20files/Career%20Copilot%20AI/career-copilot-server/src/models/Resume.ts))
 Holds raw text, cloud hosting links, and parser output.
 *   `userId`: ObjectId (Ref: `User`, Required)
 *   `originalName`: String (e.g. `my_cv.pdf`)
@@ -100,29 +105,28 @@ Holds raw text, cloud hosting links, and parser output.
     *   `education`: Array of `{ institution: String, degree: String }`
 *   `isActive`: Boolean (Default: `true`)
 
-### 3. JobDescription Schema ([JobDescription.ts](file:///d:/Coding%20files/Career%20Copilot%20AI/career-copilot-server/src/models/JobDescription.ts))
+### 4. JobDescription Schema ([JobDescription.ts](file:///d:/Coding%20files/Career%20Copilot%20AI/career-copilot-server/src/models/JobDescription.ts))
 Stores targeted jobs description.
 *   `userId`: ObjectId (Ref: `User`, Required)
-*   `title`: String (Required, e.g. `Senior Frontend Engineer`)
+*   `title`: String (Required)
 *   `company`: String (Default: `""`)
 *   `description`: String (Required, raw JD text)
 *   `extractedSkills`: Array of Strings (Default: `[]`)
 
-### 4. Analysis Schema ([Analysis.ts](file:///d:/Coding%20files/Career%20Copilot%20AI/career-copilot-server/src/models/Analysis.ts))
+### 5. Analysis Schema ([Analysis.ts](file:///d:/Coding%20files/Career%20Copilot%20AI/career-copilot-server/src/models/Analysis.ts))
 The core assessment object compiling status and details for each analysis tool.
 *   `userId`: ObjectId (Ref: `User`, Required)
 *   `resumeId`: ObjectId (Ref: `Resume`, Required)
 *   `jobDescriptionId`: ObjectId (Ref: `JobDescription`, Required)
-*   `status`: `"pending" | "running" | "completed" | "failed"` (Default: `"pending"`)
-*   `toolStatus`: Object containing step statuses:
-    *   `ats`, `skillGap`, `optimizer`, `coverLetter`, `interview`, `roadmap`: Each can be `"not_started" | "running" | "completed" | "failed"`
-*   `results`: Structured object:
+*   `status`: `"pending" | "running" | "completed" | "failed"`
+*   `toolStatus`: Status enum for each pipeline step (`ats`, `skillGap`, `optimizer`, `coverLetter`, `interview`, `roadmap`).
+*   `results`:
     *   **`ats`**: Score, strengths, weaknesses, missing keywords, summary.
-    *   **`skillGap`**: Missing skills, recommended skills, learning priorities (`{ skill, reason }`), summary.
-    *   **`optimizer`**: Overall summary, atsImpact (`{ currentScore, expectedScore, reason }`), keyword suggestions, experience suggestions (`{ company, role, suggestions }`), project suggestions (`{ project, suggestions }`), section suggestions (`{ section, suggestion }`), and optimized content markdown.
+    *   **`skillGap`**: Missing skills, recommended skills, learning priorities.
+    *   **`optimizer`**: ATS Impact (`currentScore`, `expectedScore`), keyword suggestions, experience/project tweaks, and optimized content markdown.
     *   **`coverLetter`**: Subject and body content.
-    *   **`interview`**: HR, Resume-based, Experience-based, Project-based, Technical, Coding, and Behavioral question categories containing unique generated UUID IDs, question text, difficulty, topics, and sample responses.
-    *   **`roadmap`**: Roadmap overview, milestones list containing steps (`{ title, order, priority, estimatedHours, resources: [{ title, type, query, reason }], outcomes }`), and interview preparation checklists.
+    *   **`interview`**: Segregated questions (HR, Technical, Behavioral, Follow-ups). Includes generated answer statuses and content.
+    *   **`roadmap`**: Roadmap overview, milestones, steps (hours, outcomes), resources, and checklists.
 
 ---
 
@@ -154,7 +158,10 @@ The core assessment object compiling status and details for each analysis tool.
 [Client] <--- Returns Structured Resume Data <---+
 ```
 
-### 3. Analysis Pipeline Execution Workflow
+### 3. Analysis Quota Enforcement
+Before starting a new analysis, the `checkAnalysisQuota` middleware intercepts the request. It queries the `UserUsage` schema to ensure the user has not exceeded the limits of their plan (`FREE`, `PRO`, `ENTERPRISE`).
+
+### 4. Analysis Pipeline Execution Workflow
 The pipeline execution is initiated through GraphQL and reports progress sequentially via SSE:
 ```
 [Client] ---- Mutates startAnalysis(analysisId) ----> [Server]
@@ -249,7 +256,7 @@ All REST endpoints prefix: `/api`
     ```
 *   **Response (200 OK)**: Updated user object.
 
-### 3. Resume Upload
+### 3. Resumes
 *   **Endpoint**: `POST /api/resumes/upload`
 *   **Auth Required**: Yes (`Bearer <token>`)
 *   **Content-Type**: `multipart/form-data`
@@ -299,6 +306,17 @@ All REST endpoints prefix: `/api`
     ```
 *   **Response (201 Created)**: Created JobDescription document.
 
+*   **Endpoint**: `POST /api/job-descriptions/import`
+*   **Auth Required**: Yes (`Bearer <token>`)
+*   **Request Body**:
+    ```json
+    {
+      "url": "https://company.com/careers/senior-frontend-developer"
+    }
+    ```
+*   **Description**: Imports and extracts a Job Description from a remote URL.
+*   **Response (200 OK)**: Extracted title, company, and raw job description.
+
 *   **Endpoint**: `GET /api/job-descriptions`
 *   **Auth Required**: Yes (`Bearer <token>`)
 *   **Description**: Fetches all job descriptions created by the user.
@@ -317,6 +335,16 @@ All REST endpoints prefix: `/api`
     ]
     ```
 
+### 5. Analysis Lifecycle & Quota Features
+*   **GET `/api/analyses/dashboard`** — Fetches all job descriptions and their corresponding pruned analysis metadata, sorted by date (used for fast loading dashboard). (Auth: Yes)
+*   **GET `/api/analyses/usage`** — Fetches the current user's usage summary against their plan limits. (Auth: Yes)
+*   **POST `/api/analyses`** — Initializes an analysis. Enforces quotas.
+*   **POST `/api/analyses/:analysisId/start`** — Triggers the main pipeline.
+*   **DELETE `/api/analyses/:analysisId`** — Deletes the given analysis.
+*   **POST `/api/analyses/:analysisId/interview`** — Launches interview questions generator.
+*   **POST `/api/analyses/:analysisId/roadmap`** — Launches roadmap generator.
+*   **POST `/api/analyses/:analysisId/questions/:questionId/answer`** — Triggers the asynchronous generation of a single interview question's answer, streaming response chunks via SSE.
+
 ---
 
 ## API Docs: Server-Sent Events (SSE)
@@ -330,10 +358,10 @@ Real-time pipeline monitoring is handled via a dedicated Server-Sent Events endp
     Content-Type: text/event-stream
     Cache-Control: no-cache
     Connection: keep-alive
+    X-Accel-Buffering: no
     ```
 
 ### SSE Message Formats
-Messages are sent as standard JSON payloads matching the following structures:
 
 #### Progress Event
 Sent when a tool begins execution or completes successfully.
@@ -379,6 +407,20 @@ data: {
 }
 ```
 
+#### Individual Answer Streaming Events
+When generating answers on-demand via the specific answer endpoint, these distinct events are emitted to power typewriter-style UI effects:
+*   **`answer_started`**: Indicates LLM has begun formulating a response.
+*   **`answer_delta`**: Streams chunks of the answer text in real-time.
+    ```json
+    data: {
+      "type": "answer_delta",
+      "questionId": "q-1234",
+      "delta": "In my previous role, "
+    }
+    ```
+*   **`answer_completed`**: Signifies the end of the generation stream.
+*   **`answer_error`**: Triggered if generation fails abruptly.
+
 ---
 
 ## API Docs: GraphQL Schema & Resolvers
@@ -418,48 +460,38 @@ Fetches the full results and state of an analysis document.
     { "id": "603d3f9b2d87e0234a9b4003" }
     ```
 
-### Mutations
+### Actions (REST Alternatives to Mutations)
 
-#### 1. `createAnalysis(resumeId: ID!, jobDescriptionId: ID!): Analysis`
-Initializes a new analysis document with a status of `"pending"`.
-*   **Sample Mutation**:
-    ```graphql
-    mutation CreateAnalysis($resumeId: ID!, $jobDescriptionId: ID!) {
-      createAnalysis(resumeId: $resumeId, jobDescriptionId: $jobDescriptionId) {
-        id
-        status
-      }
+Due to timeouts and long-running generative processes, mutations have been fully replaced with standard REST endpoints. 
+
+#### 1. Create Analysis
+*   **Endpoint**: `POST /api/analyses`
+*   **Auth Required**: Yes (`Bearer <token>`)
+*   **Request Body**:
+    ```json
+    {
+      "resumeId": "603d3f9b2d87...",
+      "jobDescriptionId": "603d3f9b2d88..."
     }
     ```
+*   **Response (201 Created)**: Returns the newly generated Analysis ID with a `pending` status.
 
-#### 2. `startAnalysis(analysisId: ID!): Boolean!`
-Triggers the asynchronous pipeline execution containing ATS, Skill Gap, Resume Optimizer, and Cover Letter tools. Dispatches progress to SSE stream.
-*   **Sample Mutation**:
-    ```graphql
-    mutation StartAnalysis($analysisId: ID!) {
-      startAnalysis(analysisId: $analysisId)
-    }
-    ```
+#### 2. Start Core Pipeline
+*   **Endpoint**: `POST /api/analyses/:analysisId/start`
+*   **Auth Required**: Yes (`Bearer <token>`)
+*   **Description**: Triggers the asynchronous pipeline execution (ATS, Skill Gap, Optimizer, Cover Letter). Connect to the SSE endpoint to monitor progress.
 
-#### 3. `generateInterviewQuestions(analysisId: ID!): Boolean!`
-*   **Condition**: Core pipeline analysis must be in `completed` state.
-*   **Description**: Launches asynchronous Gemini agent to generate 7 categories of interview questions.
-*   **Sample Mutation**:
-    ```graphql
-    mutation GenerateInterview($analysisId: ID!) {
-      generateInterviewQuestions(analysisId: $analysisId)
-    }
-    ```
+#### 3. Generate Interview Questions
+*   **Endpoint**: `POST /api/analyses/:analysisId/interview`
+*   **Auth Required**: Yes (`Bearer <token>`)
+*   **Condition**: Core pipeline analysis must be in a `completed` state.
+*   **Description**: Launches asynchronous Gemini agent to generate 7 categories of interview questions based on the candidate's skills and the JD.
 
-#### 4. `generateLearningRoadmap(analysisId: ID!): Boolean!`
-*   **Condition**: Interview question generation must be in `completed` state.
-*   **Description**: Launches Gemini agent to assemble personalized roadmap milestones and steps based on skill gaps.
-*   **Sample Mutation**:
-    ```graphql
-    mutation GenerateRoadmap($analysisId: ID!) {
-      generateLearningRoadmap(analysisId: $analysisId)
-    }
-    ```
+#### 4. Generate Learning Roadmap
+*   **Endpoint**: `POST /api/analyses/:analysisId/roadmap`
+*   **Auth Required**: Yes (`Bearer <token>`)
+*   **Condition**: Interview question generation must be in a `completed` state.
+*   **Description**: Launches asynchronous Gemini agent to assemble personalized roadmap milestones and steps based on the identified skill gaps.
 
 ---
 
